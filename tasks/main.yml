@@ -1,10 +1,11 @@
 - ec2_ami_find:
-    name: "ubuntu/images/ebs/ubuntu-trusty-14.04-amd64-server-*"
+    name: "ubuntu/images/hvm/ubuntu-trusty-14.04-amd64-server-*"
     owner: 099720109477
     sort: name
     sort_order: descending
     sort_end: 1
     region: "{{ aws_region }}"
+    virtualization_type: hvm
   register: ami_find
 
 - debug: msg="{{ ami_find }}"
