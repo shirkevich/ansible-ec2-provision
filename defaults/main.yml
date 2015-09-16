@@ -1,0 +1,24 @@
+---
+aws_vpc_cidr_block: 172.23.0.0/16
+aws_vpc_subnets:
+  - cidr: 172.23.1.0/24
+    as: "{{ aws_region}}a"
+    resource_tags: { "Environment":"Dev", "Tier" : "Web" }
+  - cidr: 172.23.2.0/24
+    as: "{{ aws_region}}b"
+    resource_tags: { "Environment":"Dev", "Tier" : "Db" }
+aws_vpc_route_tables:
+  - subnets:
+      - 172.23.1.0/24
+    routes:
+      - dest: 0.0.0.0/0
+        gw: igw
+aws_sg_rules:
+  - proto: tcp
+    from_port: 80
+    to_port: 80
+    cidr_ip: 0.0.0.0/0
+  - proto: tcp
+    from_port: 22
+    to_port: 22
+    cidr_ip: 0.0.0.0/0
