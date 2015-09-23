@@ -8,13 +8,12 @@
     virtualization_type: hvm
   register: ami_find
 
-- debug: msg="{{ ami_find }}"
+# - debug: msg="{{ ami_find }}"
 
-- name: provision local user key
+- name: provision ec2 user
   ec2_key:
-    name: "{{ ansible_user_id }}"
-    key_material: "{{ item }}"
-  with_file: ~/.ssh/id_rsa.pub
+    name: "{{ project_name}}_{{ user_id }}"
+    key_material: "{{ aws_key }}"
 
 - ec2_vpc:
     state: present
@@ -42,7 +41,7 @@
     instance_tags: "{{ aws_instance_tags }}"
     group:
       - "{{ aws_sg_name }}"
-    key_name: "{{ ansible_user_id }}"
+    key_name: "{{project_name}}_{{ user_id }}"
     assign_public_ip: yes
     vpc_subnet_id: "{{ vpc.subnets[0].id }}"
     wait: yes
@@ -51,7 +50,7 @@
 # - debug: msg="{{ ec2 }}"
 
 - name: Add Server to inventory
-  local_action: add_host hostname={{ item.public_ip }} groupname=tag_role_nodejs
+  local_action: add_host hostname={{ item.public_ip }} groupname="tag_role_{{ project_name }}_{{ user_id }}"
   with_items: ec2.instances
 
 - name: Waiting for SSH to come up
