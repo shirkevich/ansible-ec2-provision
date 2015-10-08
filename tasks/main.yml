@@ -13,7 +13,8 @@
 - name: provision ec2 user
   ec2_key:
     name: "{{ product_name}}_{{ user_id }}"
-    key_material: "{{ aws_key }}"
+    key_material: "{{ item }}"
+  with_file: "{{ aws_key }}" 
 
 - ec2_vpc:
     state: present
